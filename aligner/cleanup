@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rm -rf mock.fastq.split* mock.bam.* merge.* merged.* split.*
