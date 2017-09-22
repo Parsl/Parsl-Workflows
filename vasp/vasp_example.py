@@ -3,24 +3,20 @@
 
 """
 [Notes from Dan]
-1 - a python code that runs and creates a tar file - it writes the tar file directly,
-    rather than creating the contents and then tarring them, though someone likely could
-    change this to create the contents directly with some work.
-2 - if we open the tar file, we get a bunch of stuff that includes - some directories
+1 - a python code that runs and creates some directories
     called relax.xy, some directories called neb.xy, and a Makefile.
-3 - We need to run VASP in each relax.xy directly - in our test case, there are 4 such
+2 - We need to run VASP in each relax.xy directly - in our test case, there are 4 such
     directories.  Each VASP run will take 10-30 hours on O(100) cores.
-4 - once these have finished, we run make, which uses the results in the relax.xy
+3 - once these have finished, we run make, which uses the results in the relax.xy
     directories to build the inputs in the deb.xy directories - perhaps we could
     figure out what Make does and do it in python instead, but likely, we could
     just call Make from python...
-5 - We can then run VASP in the deb.xy directories - in our test case, there are 17
+4 - We can then run VASP in the deb.xy directories - in our test case, there are 17
     such directories, with similar VASP runtimes as before.
-6 - Once these are done, we need to run some more python code that we don't actually
+5 - Once these are done, we need to run some more python code that we don't actually
     have yet, but that a student here supposedly does have written and tested.
 
-We will be working on Stampede 2. we haven't put our code in a repo (though we should - Qingyi...) 
-   and everything we used can be installed via pip.
+We will be working on Stampede 2, and everything we used can be installed via pip.
 
 """
 
