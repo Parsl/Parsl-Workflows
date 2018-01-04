@@ -1,0 +1,141 @@
+!!index array str
+ "TMA"
+!entry.TMA.unit.atoms table  str name  str type  int typex  int resx
+int flags  int seq  int elmnt  dbl chg
+ "N1" "n4" 0 1 131072 1 7 0.213659
+ "C1" "c3" 0 1 131072 2 6 -0.321845
+ "H1" "hx" 0 1 131072 3 1 0.156143
+ "H2" "hx" 0 1 131072 4 1 0.156143
+ "H3" "hx" 0 1 131072 5 1 0.156143
+ "C2" "c3" 0 1 131072 6 6 -0.321845
+ "H4" "hx" 0 1 131072 7 1 0.156143
+ "H5" "hx" 0 1 131072 8 1 0.156143
+ "H6" "hx" 0 1 131072 9 1 0.156143
+ "C3" "c3" 0 1 131072 10 6 -0.321845
+ "H7" "hx" 0 1 131072 11 1 0.156143
+ "H8" "hx" 0 1 131072 12 1 0.156143
+ "H9" "hx" 0 1 131072 13 1 0.156143
+ "C4" "c3" 0 1 131072 14 6 -0.321845
+ "H10" "hx" 0 1 131072 15 1 0.156143
+ "H11" "hx" 0 1 131072 16 1 0.156143
+ "H12" "hx" 0 1 131072 17 1 0.156143
+!entry.TMA.unit.atomspertinfo table  str pname  str ptype  int ptypex
+int pelmnt  dbl pchg
+ "N1" "n4" 0 -1 0.0
+ "C1" "c3" 0 -1 0.0
+ "H1" "hx" 0 -1 0.0
+ "H2" "hx" 0 -1 0.0
+ "H3" "hx" 0 -1 0.0
+ "C2" "c3" 0 -1 0.0
+ "H4" "hx" 0 -1 0.0
+ "H5" "hx" 0 -1 0.0
+ "H6" "hx" 0 -1 0.0
+ "C3" "c3" 0 -1 0.0
+ "H7" "hx" 0 -1 0.0
+ "H8" "hx" 0 -1 0.0
+ "H9" "hx" 0 -1 0.0
+ "C4" "c3" 0 -1 0.0
+ "H10" "hx" 0 -1 0.0
+ "H11" "hx" 0 -1 0.0
+ "H12" "hx" 0 -1 0.0
+!entry.TMA.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.TMA.unit.childsequence single int
+ 2
+!entry.TMA.unit.connect array int
+ 0
+ 0
+!entry.TMA.unit.connectivity table  int atom1x  int atom2x  int flags
+ 1 2 1
+ 1 6 1
+ 1 10 1
+ 1 14 1
+ 2 3 1
+ 2 4 1
+ 2 5 1
+ 6 7 1
+ 6 8 1
+ 6 9 1
+ 10 11 1
+ 10 12 1
+ 10 13 1
+ 14 15 1
+ 14 16 1
+ 14 17 1
+!entry.TMA.unit.hierarchy table  str abovetype  int abovex  str
+belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+ "R" 1 "A" 2
+ "R" 1 "A" 3
+ "R" 1 "A" 4
+ "R" 1 "A" 5
+ "R" 1 "A" 6
+ "R" 1 "A" 7
+ "R" 1 "A" 8
+ "R" 1 "A" 9
+ "R" 1 "A" 10
+ "R" 1 "A" 11
+ "R" 1 "A" 12
+ "R" 1 "A" 13
+ "R" 1 "A" 14
+ "R" 1 "A" 15
+ "R" 1 "A" 16
+ "R" 1 "A" 17
+!entry.TMA.unit.name single str
+ "TMA"
+!entry.TMA.unit.positions table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+ 0.864000 0.864000 0.864000
+ 1.483000 1.483000 0.233000
+ 0.233000 1.483000 1.483000
+ 1.483000 0.233000 1.483000
+ -0.864000 -0.864000 0.864000
+ -1.483000 -1.483000 0.233000
+ -0.233000 -1.483000 1.483000
+ -1.483000 -0.233000 1.483000
+ -0.864000 0.864000 -0.864000
+ -1.483000 0.233000 -1.483000
+ -1.483000 1.483000 -0.233000
+ -0.233000 1.483000 -1.483000
+ 0.864000 -0.864000 -0.864000
+ 0.233000 -1.483000 -1.483000
+ 1.483000 -0.233000 -1.483000
+ 1.483000 -1.483000 -0.233000
+!entry.TMA.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x
+int c5x  int c6x
+ 0 0 0 0 0 0
+!entry.TMA.unit.residues table  str name  int seq  int childseq  int
+startatomx  str restype  int imagingx
+ "TMA" 1 18 1 "?" 0
+!entry.TMA.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.TMA.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.TMA.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+

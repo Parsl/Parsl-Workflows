@@ -1,0 +1,15 @@
+&cntrl
+  imin   = 1,    ! turn on minimization
+  irest  = 0,    ! not to restart using previous velocities
+  ntwx   = 500,  ! how frequently to write output coordinates
+  ntpr   = 500,  ! how frequently to write information about energies, temp, etc., to outfile
+  ntx    = 1,    ! only use coordinates from restart file
+  maxcyc = 5000, ! maximum number of steps to use
+  ncyc   = 1000, ! after this switch min method
+  ntb    = 1,    ! to use constant volume periodic boundary conditions
+  cut    = 8,    ! cut-off for non-bonded interactions
+  ntr           = 1,     ! signals the use of restraints
+  restraint_wt  = 10,    ! strength of restraints in kcal mol^-1 A^-2
+  restraintmask = ':1-20',
+ /
+

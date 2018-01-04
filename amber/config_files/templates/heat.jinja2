@@ -1,0 +1,28 @@
+&cntrl
+  ntx           = 5,     !
+  ntxo          = 2,     ! write restart files in binary format to save space
+  ioutfm        = 1,     ! write trajectory in binary format to save space
+  irest         = 1,     ! do restart using previous velocities
+  ntpr          = 1000,  ! how frequently to write information about energies, temp, etc., to outfile
+  ntwr          = 1000,  ! how frequently to write the restart file
+  ntwx          = 1000,  ! how frequently to write output coordinates
+  nstlim        = 250000,! total number of steps to run
+  dt            = 0.002, ! size of the MD timestep, in ps, so 0.002 is 2 fs
+  ntf           = 2,     ! fix hydrogen bonds at a set length
+  ntc           = 2,     ! fix hydrogen bonds at a set length
+  cut           = 8,     ! cut-off for non-bonded interactions
+  ntb           = 2,     ! to use constant volume
+  ntp           = 1,     !
+  barostat      = 2,     !
+  ntt           = 3,     ! Langevin temperature control
+  gamma_ln      = 1.0,   ! Langevin frequency
+  nmropt        = 1,     ! turn on the &wt option, so that temperature can be gradually changed
+  ig            = -1,    ! turn on random number generator required for MD algorithms
+  ntr           = 1,     ! signals the use of restraints
+  restraint_wt  = 10,    ! strength of restraints used on the the following atoms defined in restraint mask
+  restraintmask = ':1-20,',
+ /
+&wt TYPE='TEMP0', istep1=0, istep2=200000, value1={{ VALUE_1 }}, value2=298.0, /
+&wt TYPE='TEMP0', istep1=200001, istep2=250000, value1=298.0, value2=298.0, /
+&wt TYPE='END' /
+

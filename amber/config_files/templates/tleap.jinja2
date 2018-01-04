@@ -1,0 +1,27 @@
+source leaprc.protein.ff14SB
+
+loadoff solvents.lib
+loadoff atomic_ions.lib
+loadAmberParams gaff2.dat
+loadAmberParams frcmod.ionsjc_tip3p
+
+DCA = loadmol2 {{ DCA }} 
+TMA = loadmol2 {{ TMA }}
+loadamberparams {{ DCA_FRCMOD }}
+loadamberparams {{ TMA_FRCMOD }}
+loadoff {{ DCA_LIB }}
+loadoff {{ TMA_LIB }}
+
+# Load the PDBs
+prot1 = loadpdb {{ PROT }} 
+setbox prot1 centers
+
+charge prot1
+#addIons2 prot1 Cl- 0
+
+# save files
+saveAmberParm prot1 {{ OUTPUT1 }} {{ OUTPUT2 }}
+
+# Quit
+quit
+

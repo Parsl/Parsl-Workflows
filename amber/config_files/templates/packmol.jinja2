@@ -1,0 +1,25 @@
+tolerance 2.0 # tolerance distance
+output {{ OUTPUT }} # output file name
+filetype pdb # output file type
+add_amber_ter
+#
+# Create a box
+#
+structure {{ STRUCTURE_1 }}
+  number 1
+  fixed 30. 30. 30. 0. 0. 0.
+  centerofmass
+end structure
+structure {{ STRUCTURE_2 }}
+  number 10 # Number of molecules
+  inside cube 0. 0. 0. 100. # x, y, z coordinates of box, and length of box in Angstroms
+end structure
+structure {{ STRUCTURE_3 }}
+  number 10
+  inside cube 0. 0. 0. 100.
+end structure
+structure {{ STRUCTURE_4 }}
+  number 6000
+  inside cube 0. 0. 0. 100.
+end structure
+
