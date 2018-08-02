@@ -85,7 +85,7 @@ def eagle_minimac(plink_inputs=[], hap_inputs=[], vcfRef_inputs=[], eagle_output
     echo "Received file: {plink_inputs[0]}, {map_inputs[0]}"
     echo "Processing {region[0]}: {region[1]} - {region[2]} -> {outputs[0]}"
     eagle --vcfRef={vcfRef_inputs[0]} --vcfTarget={plink_inputs[0]} --vcfOutFormat=z --geneticMapFile={map_inputs[0]} --bpStart {region[1]} --bpEnd {region[2]} --chrom={region[0]} --outPrefix={out_prefix} --numThreads=36 2>&1 | tee {eagle_log_outputs[0]};
-    minimac4-omp --refHaps {refhaps[0]} --haps {hap_inputs[0]} --format GT,DS,HDS,GP --passOnly --allTypedSites --window 50000 --prefix {out_minimac_prefix[0]} --log --cpu 36
+    minimac4-omp --refHaps {hap_inputs[0]} --haps {eagle_outputs[0]} --format GT,DS,HDS,GP --passOnly --allTypedSites --window 50000 --prefix {out_minimac_prefix[0]} --log --cpu 36
     '''
     #print(cmd_line)
 
@@ -184,10 +184,10 @@ if __name__ == "__main__" :
     regions = get_regions(args.regions_file, region_size)
 
     for region in regions:
-        plink_file = get_chr_file("plink.chr" + str(i), os.path.dirname(plink_outs[0].filepath), ".", "gz")
-        vcfref_file = get_chr_file("chr" + str(i) + ".phase3_v5", os.path.dirname(vcfref_inputs[0]), "_", "gz")
-        #output_file = "%s/%s" % (output_dir, os.path.basename(b_inputs[0]).replace('bed', 'eagle.chr%s.vcf.gz' % i))
-        #output_log_file = "%s/%s" % (output_dir, os.path.basename(b_inputs[0]).replace('bed', 'eagle.chr%s.log' % i))
+        plink_file = get_chr_file("plink.chr" + str(region[0]), os.path.dirname(plink_outs[0].filepath), ".", "gz")
+        vcfref_file = get_chr_file("chr" + str(region[0]) + ".phase3_v5", os.path.dirname(vcfref_inputs[0]), "_", "gz")
+        #output_file = "%s/%s" % (output_dir, os.path.basename(b_inputs[0]).replace('bed', 'eagle.chr%s.vcf.gz' % str(region[0])))
+        #output_log_file = "%s/%s" % (output_dir, os.path.basename(b_inputs[0]).replace('bed', 'eagle.chr%s.log' % str(region[0])))
         hap_file = get_chr_file(region[0], os.path.dirname(hap_inputs[0]), ".", "m3vcf.gz")
         if hap_file is None:
             continue
