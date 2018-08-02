@@ -75,6 +75,22 @@ def minimac4(haps_inputs=[], refhaps=[], region=[], out_prefix=[]):
     #print(cmd_line)
     return cmd_line
 
+# submitting eagle and minimac on each chunk
+@App('bash', dfk)
+def eagle_minimac(plink_inputs=[], hap_inputs=[], vcfRef_inputs=[], eagle_outputs=[], eagle_log_outputs=[], map_inputs=[], region=[], impute_outputs=[]):                          )
+    out_prefix = eagle_outputs[0].replace(".vcf.gz", "")
+    out_minimac_prefix = impute_outputs[0].replace(".vcf.gz", "")
+    cmd_line = '''
+
+    echo "Received file: {plink_inputs[0]}, {map_inputs[0]}"
+    echo "Processing {region[0]}: {region[1]} - {region[2]} -> {outputs[0]}"
+    eagle --vcfRef={vcfRef_inputs[0]} --vcfTarget={plink_inputs[0]} --vcfOutFormat=z --geneticMapFile={map_inputs[0]} --bpStart {region[1]} --bpEnd {region[2]} --chrom={region[0]} --outPrefix={out_prefix} --numThreads=36 2>&1 | tee {eagle_log_outputs[0]};
+    minimac4-omp --refHaps {refhaps[0]} --haps {hap_inputs[0]} --format GT,DS,HDS,GP --passOnly --allTypedSites --window 50000 --prefix {out_minimac_prefix[0]} --log --cpu 36
+    '''
+    #print(cmd_line)
+
+    
+    
 # The merge file simply concatenated the array of files passed in through the inputs list
 # into the single file specified though the outputs keyword_arg.
 # Note: On the commandline, {inputs} expands to the python list of files expressed as a
@@ -163,31 +179,37 @@ if __name__ == "__main__" :
         plink_outs.extend(x.outputs)
 
     # call eagle tool on each chromosome and output from plink
-    eagle_outs = []
-    for i in chrom_regions:
+    minimac_outs = []
+    hap_inputs = get_dir_files(hapmap_dir, "m3vcf.gz")
+    regions = get_regions(args.regions_file, region_size)
+
+    for region in regions:
         plink_file = get_chr_file("plink.chr" + str(i), os.path.dirname(plink_outs[0].filepath), ".", "gz")
         vcfref_file = get_chr_file("chr" + str(i) + ".phase3_v5", os.path.dirname(vcfref_inputs[0]), "_", "gz")
-        output_file = "%s/%s" % (output_dir, os.path.basename(b_inputs[0]).replace('bed', 'eagle.chr%s.vcf.gz' % i))
-        output_log_file = "%s/%s" % (output_dir, os.path.basename(b_inputs[0]).replace('bed', 'eagle.chr%s.log' % i))
-        x = eagle(plink_inputs=[plink_file], vcfRef_inputs=[vcfref_file], region=[i], eagle_outputs=[output_file], map_inputs=[genmap_file], eagle_log_outputs=[output_log_file])
-        eagle_outs.extend(x.outputs)
-
-    # call the minimac tool on each 1MB region per chromosome using the eagle_outs as inputs
-    minimac_outs = []
-    regions = get_regions(args.regions_file, region_size)
-    hap_inputs = get_dir_files(hapmap_dir, "m3vcf.gz")
-    for region in regions:
-        #print(region)
+        #output_file = "%s/%s" % (output_dir, os.path.basename(b_inputs[0]).replace('bed', 'eagle.chr%s.vcf.gz' % i))
+        #output_log_file = "%s/%s" % (output_dir, os.path.basename(b_inputs[0]).replace('bed', 'eagle.chr%s.log' % i))
         hap_file = get_chr_file(region[0], os.path.dirname(hap_inputs[0]), ".", "m3vcf.gz")
         if hap_file is None:
             continue
-        haps_eagle_file = get_chr_file("eagle.chr" + region[0], os.path.dirname(eagle_outs[0].filepath), ".", "vcf.gz")
+        eagle_log_output = "%s/%s" % (args.output_dir, os.path.basename(hap_file.replace('m3vcf.gz', '%s.%s.%s.eagle_log_out.txt' % (region[0], region[1], region[2]))))
+        eagle_output = "%s/%s" % (args.output_dir, os.path.basename(hap_file.replace('m3vcf.gz', '%s.%s.%s.eagle_out.txt' % (region[0], region[1], region[2]))))
         output_file = "%s/%s" % (args.output_dir, os.path.basename(hap_file.replace('m3vcf.gz', '%s.%s.%s.minimicac_out.txt' % (region[0], region[1], region[2]))))
-        x = minimac(hap_inputs=[hap_file], map_inputs=[map_file], legend_inputs=[legend_file],
-                               haps_inputs=[haps_shapeit_file],
-                               impute_outputs=[output_file],
-                               region=region)
+        x = eagle_minimac(plink_inputs=[plink_file], 
+                          hap_inputs=[hap_file],
+                          vcfRef_inputs=[vcfref_file], 
+                          map_inputs=[map_file],
+                          region=region, 
+                          impute_outputs=[output_file],
+                          eagle_log_outputs=[eagle_log_output],
+                          eagle_outputs=[eagle_output]
+                          )
+        #x = minimac(hap_inputs=[hap_file], map_inputs=[map_file], legend_inputs=[legend_file],
+        #                       haps_inputs=[haps_shapeit_file],
+        #                       impute_outputs=[output_file],
+        #                       region=region)
         minimac_outs.extend(x.outputs)
+ 
+
     #print(minimac_outs)
 
     # The results from the bwa are in bam_files, and these are passed to the merge app
