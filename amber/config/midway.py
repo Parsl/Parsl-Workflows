@@ -1,60 +1,50 @@
-config = {
-    "sites" : [{
-        "site" : "Midway_SB",
-        "auth" : {
-            "channel" : "local"
-        },
-        "execution" : {
-            "executor" : "ipp",
-            "provider" : "slurm",
-            "script_dir" : ".scripts",
-            "block" : {
-                "nodes" : 1,
-                "taskBlocks" : 1,
-                "walltime" : "00:30:00",
-                "initBlocks" : 1,
-                "minBlocks" : 0,
-                "maxBlocks" : 1,
-                "scriptDir" : ".",
-                "options" : {
-                    "partition" : "sandyb",
-                    "overrides" : '''module unload python;
-module load python/3.5.2+gcc-4.8;
-source /scratch/midway2/yadunand/parsl_env_3.5.2_gcc/bin/activate'''
-                  }
-              }
-          }
-        },
-        {
-        "site" : "Midway_GPU",
-        "auth" : {
-            "channel" : "local"
-        },
-        "execution" : {
-            "executor" : "ipp",
-            "provider" : "slurm",
-            "script_dir" : ".scripts",
-            "block" : {
-                "nodes" : 1,
-                "taskBlocks" : 1,
-                "walltime" : "01:00:00",
-                "initBlocks" : 1,
-                "minBlocks" : 0,
-                "maxBlocks" : 1,
-                "scriptDir" : ".",
-                "options" : {
-                    "partition" : "gpu2",
-                    "overrides" : '''#SBATCH --gres=gpu:1
-module unload python;
-module load python/3.5.2+intel-16.0;
-module load cuda/8.0;
-module unload intel;
-module load intel/17.0;
-source /scratch/midway2/yadunand/parsl_env_3.5.2_gcc/bin/activate'''
-                  }
-              }
-          }
-        }
-        ],
-    "globals" : {   "lazyErrors" : True }
-}
+from parsl.providers import SlurmProvider
+from parsl.channels import LocalChannel
+from parsl.config import Config
+from parsl.executors import HighThroughputExecutor
+from parsl.launchers import SrunLauncher
+from parsl.launchers import SingleNodeLauncher
+from parsl.addresses import address_by_hostname
+
+
+from parsl.data_provider.scheme import GlobusScheme
+
+
+midway_htex = Config(
+            executors=[
+                HighThroughputExecutor(
+                    label="midway_cpu",
+                    worker_debug=True,
+                    address=address_by_hostname(),
+                    #address='172.25.180.72', # infiniband interface on midway
+                    provider=SlurmProvider(
+                        'sandyb',
+                        launcher=SingleNodeLauncher(),
+                        worker_init='source activate parsl_dev',
+                        init_blocks=1,
+                        max_blocks=1,
+                        min_blocks=1,
+                        nodes_per_block=1,
+                        walltime='1:30:00'
+                    ),
+                ),
+                HighThroughputExecutor(
+                    label="midway_gpu",
+                    worker_debug=True,
+                    address=address_by_hostname(),
+                    #address='172.25.180.72', # infiniband interface on midway
+                    provider=SlurmProvider(
+                        'gpu2',
+                        launcher=SingleNodeLauncher(),
+                        scheduler_options='''#SATCH --gres=gpu:1''',
+                        worker_init='''source activate parsl_dev''',
+                        init_blocks=1,
+                        max_blocks=1,
+                        min_blocks=1,
+                        nodes_per_block=1,
+                        walltime='1:30:00'
+                    ),
+                )
+            ],
+            strategy=None
+        )

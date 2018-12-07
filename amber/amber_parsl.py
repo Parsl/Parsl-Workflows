@@ -1,15 +1,13 @@
 import parsl
-from parsl import *
-from config.midway import config
+from parsl.app.app import python_app, bash_app
+from config.midway import midway_htex
 from  jinja2 import Template, Environment
 from jinja2.loaders import FileSystemLoader
 import os
-from parsl import set_stream_logger
 
-set_stream_logger()
+parsl.set_stream_logger()
 
-dfk = DataFlowKernel(config=config)
-
+parsl.load(midway_htex)
 # Helper function to create an input file from a template
 def create_template(template_name, output_name, contents):
     fs_loader = FileSystemLoader('config_files/templates')
@@ -25,30 +23,30 @@ def create_template(template_name, output_name, contents):
 #################   
 # App definitions
 #################
-@App('bash', dfk, sites=["Midway_SB"])
+@bash_app(executors=['midway_cpu'])
 def packmol(input_file=None, inputs=[], outputs=[], stdout=None, stderr=None):
     return "/scratch/midway2/chard/clean/packmol-17.163/packmol < %s" % input_file
     
 
-@App('bash', dfk, sites=["Midway_SB"])
+@bash_app(executors=['midway_cpu'])
 def tleap(input_file, inputs=[], outputs=[], stdout=None, stderr=None, mock=False ):
     return '''module load amber/16; tleap -f %s''' % input_file
 
 ## Minimization
-@App('bash', dfk, sites=["Midway_SB"])
+@bash_app(executors=['midway_cpu'])
 def minimization(input_file, inputs=[], outputs=[], stdout=None, stderr=None, mock=False ): 
     return '''module load amber; 
               mpirun -np 6 pmemd.MPI -O -i %s -o {outputs[0]} -c {inputs[0]} -p {inputs[1]} -r {outputs[1]} -ref {inputs[0]}''' % input_file
 
 ## Used for Heating, Equilibration, and Production
-@App('bash', dfk, sites=["Midway_GPU"])
+@bash_app(executors=['midway_gpu'])
 def pmemd_cuda(input_file=None, inputs=[], outputs=[], stdout=None, stderr=None, ref=True ): 
     if ref:
         r = "-ref {inputs[1]}"
     else: 
         r = ""
 
-    return '''/software/amber-16-el6-x86_64+cuda-8.0/bin/pmemd.cuda -O -i %s -p {inputs[0]}  -c {inputs[1]} -o {outputs[0]} -r {outputs[1]} -x {outputs[2]} %s''' % (input_file, r)
+    return '''pmemd.cuda -O -i %s -p {inputs[0]}  -c {inputs[1]} -o {outputs[0]} -r {outputs[1]} -x {outputs[2]} %s''' % (input_file, r)
        
 # Helper functions
 def round_temp(x, base=5):
@@ -112,7 +110,7 @@ print("Constant volume heating")
 heat_vol = pmemd_cuda(input_file='config_files/static/heat.1.in', 
         inputs=[tleap_future.outputs[0], min_future.outputs[1]], 
         outputs=['heat.1.out', 'heat.1.rst7', 'heat.1.nc'], 
-        stdout='heat1stdout', stderr='heat1stderr')
+        stdout='heat1.stdout', stderr='heat1.stderr')
 
 heat_vol.result()
 
